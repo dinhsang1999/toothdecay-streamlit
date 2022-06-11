@@ -5,6 +5,8 @@ from tensorflow.keras.layers import Dense, Flatten, Dropout
 from tensorflow.keras import Sequential
 import numpy as np
 import cv2
+import os
+import urllib
 from streamlit_lottie import st_lottie
 from streamlit_lottie import st_lottie_spinner
 from PIL import Image
@@ -43,6 +45,7 @@ lottie_giveimage_sidebar = load_lottieurl('https://assets4.lottiefiles.com/packa
 lottie_giveimage_url = "https://assets2.lottiefiles.com/packages/lf20_9p4kck7t.json"
 lottie_giveimage = load_lottieurl(lottie_giveimage_url)
 
+os.makedirs('model',exist_ok = True)
 
 if not selected_image:
 	with st.sidebar:
@@ -53,6 +56,8 @@ else:
 	img = Image.open(selected_image)
 	img = np.array(img.convert("RGB"))
 	st.image(img)
+	model_url = 'https://github.com/dinhsang1999/toothdecay-streamlit/releases/download/vgg16-224/best_model.h5'
+	urllib.request.urlretrieve(model_url, os.path.join("model", "best_model.h5"))
 
 	classes = ['carry','no-carry']
 	base_model = tf.keras.applications.VGG16(include_top=False, input_shape=(224, 224, 3), weights=None,classes=2)
