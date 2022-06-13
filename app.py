@@ -21,7 +21,8 @@ st.image(image_cover,use_column_width= True)
 st.write("""
 # Tooth decay identification Web App
 
-***Skin cancer*** is
+***Tooth decay identification*** is a final thesis project of Khong Minh Duc from IU-VNU advised by Dr. Le Duy Tan.
+This project will help to shorcut diganosis timing of dentists in decay-era
 
 ***Classes***: 
 ```python
@@ -46,6 +47,10 @@ lottie_giveimage_url = "https://assets2.lottiefiles.com/packages/lf20_9p4kck7t.j
 lottie_giveimage = load_lottieurl(lottie_giveimage_url)
 
 os.makedirs('model',exist_ok = True)
+if os.path.exists('model/best_model.h5'):
+	os.remove('model/best_model.h5')
+model_url = 'https://github.com/dinhsang1999/toothdecay-streamlit/releases/download/vgg16-224/best_model.h5'
+urllib.request.urlretrieve(model_url, os.path.join("model", "best_model.h5"))
 
 if not selected_image:
 	with st.sidebar:
@@ -56,8 +61,6 @@ else:
 	img = Image.open(selected_image)
 	img = np.array(img.convert("RGB"))
 	st.image(img)
-	model_url = 'https://github.com/dinhsang1999/toothdecay-streamlit/releases/download/vgg16-224/best_model.h5'
-	urllib.request.urlretrieve(model_url, os.path.join("model", "best_model.h5"))
 
 	classes = ['carry','no-carry']
 	base_model = tf.keras.applications.VGG16(include_top=False, input_shape=(224, 224, 3), weights=None,classes=2)
@@ -82,9 +85,9 @@ else:
 	st.write(class_name)
 	#Recomendation
 	if class_name == 'carry':
-		st.write('Recomendation:?')
+		st.write('Recomendation: Using P/S S100 Pro with whitening P/S Toothpaste will help you improve their oral health.')
 	else:
-		st.write('Recomendation:?')
+		st.write('Recomendation: Your oral health is good. However, you should to use P/S S100 Pro Electric toothbrush to maintain it.')
 
 
 
