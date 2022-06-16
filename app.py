@@ -52,7 +52,7 @@ lottie_giveimage = load_lottieurl(lottie_giveimage_url)
 # if os.path.exists('model/best_model.h5'):
 # 	os.remove('model/best_model.h5')
 
-@st.cache
+@st.cache(allow_output_mutation=True)
 def load_model():
 	os.makedirs('model',exist_ok = True)
 	if not os.path.exists('model/best_model.h5'):
