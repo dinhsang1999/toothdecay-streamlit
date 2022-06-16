@@ -46,12 +46,31 @@ lottie_giveimage_sidebar = load_lottieurl('https://assets4.lottiefiles.com/packa
 lottie_giveimage_url = "https://assets2.lottiefiles.com/packages/lf20_9p4kck7t.json"
 lottie_giveimage = load_lottieurl(lottie_giveimage_url)
 
-os.makedirs('model',exist_ok = True)
-if os.path.exists('model/best_model.h5'):
-	os.remove('model/best_model.h5')
-model_url = 'https://github.com/dinhsang1999/toothdecay-streamlit/releases/download/vgg16-224/best_model.h5'
-urllib.request.urlretrieve(model_url, os.path.join("model", "best_model.h5"))
+# os.makedirs('model',exist_ok = True)
+# if os.path.exists('model/best_model.h5'):
+# 	os.remove('model/best_model.h5')
 
+@st.cache
+def load_model():
+	os.makedirs('model',exist_ok = True)
+	if not os.path.exists('model/best_model.h5'):
+		with st.spinner("Downloading model... this may take awhile! \n Don't stop it!"):
+			model_url = 'https://github.com/dinhsang1999/toothdecay-streamlit/releases/download/vgg16-224/best_model.h5'
+			urllib.request.urlretrieve(model_url, os.path.join("model", "best_model.h5"))
+	base_model = tf.keras.applications.VGG16(include_top=False, input_shape=(224, 224, 3), weights=None,classes=2)
+	model = Sequential()
+	model.add(base_model)
+	model.add(Flatten())
+	model.add(Dense(512, activation="relu"))
+	model.add(Dropout(0.2))
+	model.add(Dense(256, activation="relu"))
+	model.add(Dropout(0.2))
+	model.add(Dense(2, activation="softmax"))
+	
+	model.load_weights('model/best_model.h5')
+	
+	return model
+	
 if not selected_image:
 	with st.sidebar:
             	st_lottie(lottie_giveimage_sidebar, key = 'giveimage_sidebar',height=500)
@@ -63,19 +82,9 @@ else:
 	st.image(img)
 
 	classes = ['carry','no-carry']
-	base_model = tf.keras.applications.VGG16(include_top=False, input_shape=(224, 224, 3), weights=None,classes=2)
-
-	model = Sequential()
-	model.add(base_model)
-	model.add(Flatten())
-	model.add(Dense(512, activation="relu"))
-	model.add(Dropout(0.2))
-	model.add(Dense(256, activation="relu"))
-	model.add(Dropout(0.2))
-	model.add(Dense(2, activation="softmax"))
-
-	model.load_weights('model/best_model.h5')
-
+	
+	model = load_model()
+		
 	img = cv2.resize(img, (224, 224))
 	result = model.predict(img.reshape(1, 224, 224, 3))
 	max_prob = max(result[0])	
