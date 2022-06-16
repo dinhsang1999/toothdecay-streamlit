@@ -52,7 +52,7 @@ lottie_giveimage = load_lottieurl(lottie_giveimage_url)
 # if os.path.exists('model/best_model.h5'):
 # 	os.remove('model/best_model.h5')
 
-@st.cache
+@st.cache(ttl=24*3600,max_entries=2)
 def load_model():
 	os.makedirs('model',exist_ok = True)
 	if not os.path.exists('model/best_model.h5'):
@@ -73,6 +73,7 @@ def load_model():
 	
 	return model
 
+@st.cache
 def show_result(path):
 	img = Image.open(path)
 	img = np.array(img.convert("RGB"))
@@ -126,6 +127,13 @@ elif selected_image:
 else:
 	if selected_sample == 'Sample 1':
 		show_result('./sample/Caries_1.jpg')
+	if selected_sample == 'Sample 2':
+		show_result('./sample/Caries_2.jpg')
+	if selected_sample == 'Sample 3':
+		show_result('./sample/No-caries_1.jpg')
+	if selected_sample == 'Sample 4':
+		show_result('./sample/No-caries_2.jpg')
+		
 		
 
 
