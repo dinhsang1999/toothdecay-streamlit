@@ -72,8 +72,32 @@ def load_model():
 	model.load_weights('model/best_model.h5')
 	
 	return model
+
+def show_result(path):
+	img = Image.open(path)
+	img = np.array(img.convert("RGB"))
+	st.image(img)
 	
-if (not selected_image) and (selected_sample == 'Select samle'):
+	classes = ['carry','no-carry']
+	
+	model = load_model()
+	
+	img = cv2.resize(img, (224, 224))
+	result = model.predict(img.reshape(1, 224, 224, 3))
+	max_prob = max(result[0])
+	
+	class_ind = list(result[0]).index(max_prob)
+	class_name = classes[class_ind]
+
+	st.write(class_name)
+	#Recomendation
+	if class_name == 'carry':
+		st.write('Recomendation: Using P/S S100 Pro with whitening P/S Toothpaste will help you improve their oral health.')
+	else:
+		st.write('Recomendation: Your oral health is good. However, you should to use P/S S100 Pro Electric toothbrush to maintain it.')
+	
+	
+if (not selected_image) and (selected_sample == 'Select sample'):
 	with st.sidebar:
             	st_lottie(lottie_giveimage_sidebar, key = 'giveimage_sidebar',height=500)
 
@@ -100,7 +124,9 @@ elif selected_image:
 	else:
 		st.write('Recomendation: Your oral health is good. However, you should to use P/S S100 Pro Electric toothbrush to maintain it.')
 else:
-	st.write(selected_sample)
+	if selected_sample == 'Sample 1':
+		show_result('./sample/Caries_1.png')
+		
 
 
 
