@@ -52,7 +52,7 @@ lottie_giveimage = load_lottieurl(lottie_giveimage_url)
 # if os.path.exists('model/best_model.h5'):
 # 	os.remove('model/best_model.h5')
 
-@st.cache(ttl=24*3600,max_entries=2)
+@st.cache
 def load_model():
 	os.makedirs('model',exist_ok = True)
 	if not os.path.exists('model/best_model.h5'):
@@ -73,7 +73,6 @@ def load_model():
 	
 	return model
 
-@st.cache
 def show_result(path):
 	img = Image.open(path)
 	img = np.array(img.convert("RGB"))
