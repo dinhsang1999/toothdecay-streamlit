@@ -15,6 +15,8 @@ from PIL import Image
 st.sidebar.header('User Input Features')
 selected_image = st.sidebar.file_uploader('Upload image from PC',type=['png', 'jpg'],help='Type of image should be PNG or JPEG')
 
+selected_sample = st.sidebar.selectbox('Sample',('Select sample','Sample 1','Sample 2','Sample 3','Sample 4'),help="Sample 1: ... - Sample 2: ...")
+
 image_cover = Image.open('./logo-ps.png')
 st.image(image_cover,use_column_width= True)
 
@@ -71,12 +73,12 @@ def load_model():
 	
 	return model
 	
-if not selected_image:
+if (not selected_image) and (selected_sample == 'Select samle'):
 	with st.sidebar:
             	st_lottie(lottie_giveimage_sidebar, key = 'giveimage_sidebar',height=500)
 
 	st_lottie(lottie_giveimage,key = 'giveme',height=400)
-else:
+elif selected_image:
 	img = Image.open(selected_image)
 	img = np.array(img.convert("RGB"))
 	st.image(img)
@@ -97,6 +99,8 @@ else:
 		st.write('Recomendation: Using P/S S100 Pro with whitening P/S Toothpaste will help you improve their oral health.')
 	else:
 		st.write('Recomendation: Your oral health is good. However, you should to use P/S S100 Pro Electric toothbrush to maintain it.')
+else:
+	st.write(selected_sample)
 
 
 
