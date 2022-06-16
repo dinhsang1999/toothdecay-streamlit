@@ -125,7 +125,7 @@ elif selected_image:
 		st.write('Recomendation: Your oral health is good. However, you should to use P/S S100 Pro Electric toothbrush to maintain it.')
 else:
 	if selected_sample == 'Sample 1':
-		show_result('./sample/Caries_1.png')
+		show_result('./sample/Caries_1.jpg')
 		
 
 
